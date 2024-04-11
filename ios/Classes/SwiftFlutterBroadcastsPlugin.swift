@@ -145,5 +145,6 @@ class BroadcastManager {
     
     func sendBroadcast(name: String, data: [String: Any]) {
         NotificationCenter.default.post(name: Notification.Name(name), object: nil, userInfo: data)
+        print("sendBroadcast with: \(name), info: \(data)")
     }
 }
