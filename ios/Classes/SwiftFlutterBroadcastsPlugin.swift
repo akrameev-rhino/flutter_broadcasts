@@ -48,11 +48,12 @@ public class SwiftFlutterBroadcastsPlugin: NSObject, FlutterPlugin {
         _ call: FlutterMethodCall,
         _ result: @escaping FlutterResult,
         handler: IdNamesHandler) {
-            guard let id = call.arguments[ReceiverArgument.id.rawValue] as? Int else {
+            guard let args = call.arguments as? [String: Any],
+                    let id = args[ReceiverArgument.id.rawValue] as? Int else {
                 result("no receiver <\(ReceiverArgument.id.rawValue)> provided")
                 return
             }
-            guard let names = call.arguments[ReceiverArgument.names.rawValue] as? [String] else {
+            guard let names = args[ReceiverArgument.names.rawValue] as? [String] else {
                 result("no receiver <\(ReceiverArgument.names.rawValue)> provided")
                 return
             }
@@ -63,11 +64,12 @@ public class SwiftFlutterBroadcastsPlugin: NSObject, FlutterPlugin {
         _ call: FlutterMethodCall,
         _ result: @escaping FlutterResult,
         handler: NameDataHandler){
-            guard let name = call.arguments[BroadcastArgument.name.rawValue] as? String else {
+            guard let args = call.arguments as? [String: Any],
+                  let name = args[BroadcastArgument.name.rawValue] as? String else {
                 result("No broadcast <\(BroadcastArgument.name.rawValue)> provided")
                 return
             }
-            let data = call.arguments[BroadcastArgument.data.rawValue] as? [String: Any] ?? [:]
+            let data = args[BroadcastArgument.data.rawValue] as? [String: Any] ?? [:]
             handler(name, data)
         }
     
