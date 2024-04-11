@@ -15,8 +15,6 @@ public class SwiftFlutterBroadcastsPlugin: NSObject, FlutterPlugin {
         case name, data
     }
     
-    static let FlutterMethodNotImplemented = "FlutterMethodNotImplemented"
-    
     typealias NameDataHandler = (_ name: String, _ data: [String: Any]) -> Void
     typealias IdNamesHandler = (_ id: Int, _ names: [String]) -> Void
     
@@ -50,11 +48,11 @@ public class SwiftFlutterBroadcastsPlugin: NSObject, FlutterPlugin {
         _ call: FlutterMethodCall,
         _ result: @escaping FlutterResult,
         handler: IdNamesHandler) {
-            guard let id = call.argument[ReceiverArgument.id.rawValue] as? Int else {
+            guard let id = call.arguments[ReceiverArgument.id.rawValue] as? Int else {
                 result("no receiver <\(ReceiverArgument.id.rawValue)> provided")
                 return
             }
-            guard let names = call.argument[ReceiverArgument.names.rawValue] as? [String] else {
+            guard let names = call.arguments[ReceiverArgument.names.rawValue] as? [String] else {
                 result("no receiver <\(ReceiverArgument.names.rawValue)> provided")
                 return
             }
@@ -65,11 +63,11 @@ public class SwiftFlutterBroadcastsPlugin: NSObject, FlutterPlugin {
         _ call: FlutterMethodCall,
         _ result: @escaping FlutterResult,
         handler: NameDataHandler){
-            guard let name = call.argument[BroadcastArgument.name.rawValue] as? String else {
+            guard let name = call.arguments[BroadcastArgument.name.rawValue] as? String else {
                 result("No broadcast <\(BroadcastArgument.name.rawValue)> provided")
                 return
             }
-            let data = call.argument[BroadcastArgument.data.rawValue] as? [String: Any] ?? [:]
+            let data = call.arguments[BroadcastArgument.data.rawValue] as? [String: Any] ?? [:]
             handler(name, data)
         }
     
@@ -120,7 +118,7 @@ class BroadcastManager {
         var handlers: [Any] = []
         for name in receiver.names {
             let handler = NotificationCenter.default.addObserver(forName: Notification.Name(name), object: nil, queue: nil) { [weak self] note in
-                self?.channel.invokeMethod(ExternalCall.receiveBroadcast.rawValue, data: note.userInfo as? [String: Any])
+                self?.channel.invokeMethod(SwiftFlutterBroadcastsPlugin.ExternalCall.receiveBroadcast.rawValue, arguments: note.userInfo as? [String: Any])
             }
             handlers.append(handler)
         }
