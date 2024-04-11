@@ -1,7 +1,7 @@
 import Flutter
 import UIKit
 
-public class SwiftFlutterBroadcastsPlugin: FlutterPlugin {
+public class SwiftFlutterBroadcastsPlugin: NSObject, FlutterPlugin {
     enum ExternalCall: String {
         case receiveBroadcast
     }
