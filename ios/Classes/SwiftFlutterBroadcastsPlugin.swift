@@ -149,9 +149,9 @@ class BroadcastManager {
     }
     
     func sendBroadcast(name: String, data: [String: Any]) {
-        let receiver = receivers.first { $0.names.contains(name) }
+        let receiver = receivers.values.first { $0.names.contains(name) }
         let info = [
-            BroadcastKeys.receiverId.rawValue: receiver.id,
+            BroadcastKeys.receiverId.rawValue: receiver?.id,
             BroadcastKeys.name.rawValue: name,
             BroadcastKeys.data.rawValue: data,
             BroadcastKeys.timestamp.rawValue: nil, //timestamp?.toIso8601String(),
