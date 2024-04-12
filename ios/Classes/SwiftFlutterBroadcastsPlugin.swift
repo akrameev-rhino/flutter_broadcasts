@@ -125,7 +125,6 @@ class BroadcastManager {
         for name in receiver.names {
             let handler = NotificationCenter.default.addObserver(forName: Notification.Name(name), object: nil, queue: nil) { [weak self] note in
                 self?.channel.invokeMethod(SwiftFlutterBroadcastsPlugin.ExternalCall.receiveBroadcast.rawValue, arguments: note.userInfo as? [String: Any])
-                print("UPDEBUG called invokeMethod to pass event from native: \(note.userInfo) through: \(self?.channel)")
             }
             handlers.append(handler)
         }
@@ -159,6 +158,5 @@ class BroadcastManager {
             //BroadcastKeys.timestamp.rawValue: timestamp?.toIso8601String(),
         ]
         NotificationCenter.default.post(name: Notification.Name(name), object: nil, userInfo: info)
-        print("UPDEBUG sendBroadcast with: \(name), info: \(info)")
     }
 }
