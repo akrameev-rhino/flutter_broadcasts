@@ -108,6 +108,10 @@ class CustomBroadcastReceiver {
 }
 
 class BroadcastManager {
+    enum BroadcastKeys: String {
+        case receiverId, name, data, timestamp
+    }
+    
     let channel: FlutterMethodChannel
     
     init(channel: FlutterMethodChannel) {
@@ -121,6 +125,7 @@ class BroadcastManager {
         for name in receiver.names {
             let handler = NotificationCenter.default.addObserver(forName: Notification.Name(name), object: nil, queue: nil) { [weak self] note in
                 self?.channel.invokeMethod(SwiftFlutterBroadcastsPlugin.ExternalCall.receiveBroadcast.rawValue, arguments: note.userInfo as? [String: Any])
+                print("UPDEBUG called invokeMethod to pass event from native: \(note.userInfo) through: \(self?.channel)")
             }
             handlers.append(handler)
         }
@@ -144,7 +149,14 @@ class BroadcastManager {
     }
     
     func sendBroadcast(name: String, data: [String: Any]) {
-        NotificationCenter.default.post(name: Notification.Name(name), object: nil, userInfo: data)
-        print("sendBroadcast with: \(name), info: \(data)")
+        let receiver = receivers.first { $0.names.contains(name) }
+        let info = [
+            BroadcastKeys.receiverId.rawValue: receiver.id,
+            BroadcastKeys.name.rawValue: name,
+            BroadcastKeys.data.rawValue: data,
+            BroadcastKeys.timestamp.rawValue: nil, //timestamp?.toIso8601String(),
+        ]
+        NotificationCenter.default.post(name: Notification.Name(name), object: nil, userInfo: info)
+        print("UPDEBUG sendBroadcast with: \(name), info: \(info)")
     }
 }
