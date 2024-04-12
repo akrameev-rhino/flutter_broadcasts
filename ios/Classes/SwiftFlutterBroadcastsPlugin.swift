@@ -49,7 +49,7 @@ public class SwiftFlutterBroadcastsPlugin: NSObject, FlutterPlugin {
         _ result: @escaping FlutterResult,
         handler: IdNamesHandler) {
             guard let args = call.arguments as? [String: Any],
-                    let id = args[ReceiverArgument.id.rawValue] as? Int else {
+                  let id = args[ReceiverArgument.id.rawValue] as? Int else {
                 result("no receiver <\(ReceiverArgument.id.rawValue)> provided")
                 return
             }
@@ -149,12 +149,14 @@ class BroadcastManager {
     }
     
     func sendBroadcast(name: String, data: [String: Any]) {
-        let receiver = receivers.values.first { $0.names.contains(name) }
-        let info = [
-            BroadcastKeys.receiverId.rawValue: receiver?.id,
+        guard let receiver = receivers.values.first(where: { $0.names.contains(name) }) else {
+            return
+        }
+        let info: [String: Any] = [
+            BroadcastKeys.receiverId.rawValue: receiver.id,
             BroadcastKeys.name.rawValue: name,
             BroadcastKeys.data.rawValue: data,
-            BroadcastKeys.timestamp.rawValue: nil, //timestamp?.toIso8601String(),
+            //BroadcastKeys.timestamp.rawValue: timestamp?.toIso8601String(),
         ]
         NotificationCenter.default.post(name: Notification.Name(name), object: nil, userInfo: info)
         print("UPDEBUG sendBroadcast with: \(name), info: \(info)")
