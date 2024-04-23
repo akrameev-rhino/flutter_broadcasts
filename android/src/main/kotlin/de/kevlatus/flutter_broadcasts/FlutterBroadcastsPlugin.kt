@@ -46,7 +46,7 @@ class CustomBroadcastReceiver(
     }
 
     fun start(context: Context) {
-        context.registerReceiver(this, intentFilter, Context.RECEIVER_NOT_EXPORTED)
+        context.registerReceiver(this, intentFilter)
         Log.d(TAG, "starting to listen for broadcasts: " + names.joinToString(";"))
     }
 
