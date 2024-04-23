@@ -109,7 +109,7 @@ class CustomBroadcastReceiver {
 
 class BroadcastManager {
     enum BroadcastKeys: String {
-        case receiverId, name, data, timestamp
+        case receiverId, name, data
     }
     
     let channel: FlutterMethodChannel
@@ -155,7 +155,6 @@ class BroadcastManager {
             BroadcastKeys.receiverId.rawValue: receiver.id,
             BroadcastKeys.name.rawValue: name,
             BroadcastKeys.data.rawValue: data,
-            //BroadcastKeys.timestamp.rawValue: timestamp?.toIso8601String(),
         ]
         NotificationCenter.default.post(name: Notification.Name(name), object: nil, userInfo: info)
     }
